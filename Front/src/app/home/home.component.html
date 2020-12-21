@@ -12,7 +12,11 @@
                   <div class="user-profile">
                     <div class="username-dt">
                       <div class="usr-pic">
-                        <img src="{{ user.picture }}" alt="" />
+                        <img
+                          style="height: 100px"
+                          src="{{ user.picture }}"
+                          alt=""
+                        />
                       </div>
                     </div>
                     <div class="user-specs">
@@ -40,53 +44,21 @@
                     <i class="la la-ellipsis-v"></i>
                   </div>
                   <div class="suggestions-list">
-                    <div class="suggestion-usd">
-                      <img src="../../assets/images/resources/s1.png" alt="" />
-                      <div class="sgt-text">
-                        <h4>Jessica William</h4>
-                        <span>Graphic Designer</span>
+                    <div *ngFor="let friend of user.kicked">
+                      <div
+                        class="suggestion-usd"
+                        *ngFor="let fr of friend.kicked"
+                      >
+                        <img
+                          src="../../assets/images/resources/s1.png"
+                          alt=""
+                        />
+                        <div class="sgt-text">
+                          <h4>Jessica William</h4>
+                          <span>Graphic Designer</span>
+                        </div>
+                        <span><i class="la la-plus"></i></span>
                       </div>
-                      <span><i class="la la-plus"></i></span>
-                    </div>
-                    <div class="suggestion-usd">
-                      <img src="../../assets/images/resources/s2.png" alt="" />
-                      <div class="sgt-text">
-                        <h4>John Doe</h4>
-                        <span>PHP Developer</span>
-                      </div>
-                      <span><i class="la la-plus"></i></span>
-                    </div>
-                    <div class="suggestion-usd">
-                      <img src="../../assets/images/resources/s3.png" alt="" />
-                      <div class="sgt-text">
-                        <h4>Poonam</h4>
-                        <span>Wordpress Developer</span>
-                      </div>
-                      <span><i class="la la-plus"></i></span>
-                    </div>
-                    <div class="suggestion-usd">
-                      <img src="../../assets/images/resources/s4.png" alt="" />
-                      <div class="sgt-text">
-                        <h4>Bill Gates</h4>
-                        <span>C & C++ Developer</span>
-                      </div>
-                      <span><i class="la la-plus"></i></span>
-                    </div>
-                    <div class="suggestion-usd">
-                      <img src="../../assets/images/resources/s5.png" alt="" />
-                      <div class="sgt-text">
-                        <h4>Jessica William</h4>
-                        <span>Graphic Designer</span>
-                      </div>
-                      <span><i class="la la-plus"></i></span>
-                    </div>
-                    <div class="suggestion-usd">
-                      <img src="../../assets/images/resources/s6.png" alt="" />
-                      <div class="sgt-text">
-                        <h4>John Doe</h4>
-                        <span>PHP Developer</span>
-                      </div>
-                      <span><i class="la la-plus"></i></span>
                     </div>
                     <div class="view-more">
                       <a href="#" title="">View More</a>
@@ -100,6 +72,7 @@
                 <div class="post-topbar">
                   <div class="user-picy">
                     <img
+                      class="circle-image"
                       src="../../assets/images/resources/user-pic.png"
                       alt=""
                     />
@@ -123,12 +96,13 @@
                     <div class="post_topbar">
                       <div class="usy-dt">
                         <img
+                          class="circle-image"
                           src="../../assets/images/resources/us-pic.png"
                           alt=""
                         />
                         <div class="usy-name">
                           <h1 *ngIf="post.comments.length > 0"></h1>
-                          <h3>{{ i }} {{ post.posterId.username }}</h3>
+                          <h3>{{ post.posterId.username }}</h3>
                           <span
                             ><img src="../../assets/images/clock.png" alt="" />3
                             min ago</span
@@ -152,14 +126,16 @@
                     <div class="job_descp">
                       <p>
                         {{ post.message }}<br />
-                        <a href="#" title="">view more</a>
+
+                        <img [src]="linkImg(post.picture)" />
                       </p>
                     </div>
                     <div class="job-status-bar">
                       <ul class="like-com">
-                        <li>
+                        <li (click)="clicklike(post)">
                           <a href="#"><i class="fas fa-heart"></i> Like</a>
                           <img src="../../assets/images/liked-img.png" alt="" />
+
                           <span>{{ post.likers.length }}</span>
                         </li>
                         <li>
@@ -328,23 +304,23 @@
         <form #postForm="ngForm" (ngSubmit)="OnSubmitPost(postForm)">
           <div class="row">
             <div class="col-lg-12">
-              <!-- <input
+                <input
                 class="form-control"
-                (change)="onPictureSelected($event)"
                 #picture="ngModel"
                 [(ngModel)]="post.picture"
+                (change)="onPictureSelected($event)"
                 name="picture"
                 type="file"
-              /> -->
+              />
             </div>
-            <!-- <div class="col-lg-12">
+            <div class="col-lg-12">
               <textarea
                 #message="ngModel"
                 [(ngModel)]="post.message"
                 name="message"
                 placeholder="Message"
               ></textarea>
-            </div> -->
+            </div>
             <div class="col-lg-12">
               <ul>
                 <li>

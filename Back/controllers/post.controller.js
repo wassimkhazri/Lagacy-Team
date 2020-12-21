@@ -5,6 +5,21 @@ const ObjectID = require("mongoose").Types.ObjectId;
 const fs = require("fs");
 const { promisify } = require("util");
 const pipeline = promisify(require("stream").pipeline);
+const multer = require("multer");
+
+module.exports.createPostTest = (req, res, next) => {
+  const newPost = new PostModel({
+    posterId: req.body.posterId,
+    message: req.body.message,
+    picture: req.file !== null ? "./upload/" + req.file.originalname : "",
+    video: req.body.video,
+    likers: [],
+    comments: []
+  });
+
+  newPost.save();
+  res.json({ success: true });
+};
 
 module.exports.readPost = (req, res) => {
   PostModel.find({})
@@ -18,6 +33,7 @@ module.exports.readPost = (req, res) => {
 };
 
 module.exports.createPost = async (req, res) => {
+  console.log("got here");
   let fileName;
   if (req.file !== null) {
     try {

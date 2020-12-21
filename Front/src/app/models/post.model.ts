@@ -1,4 +1,3 @@
-
 export class Post {
   posterId: string | undefined;
   message: string | undefined;
