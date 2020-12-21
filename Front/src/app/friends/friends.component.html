@@ -9,7 +9,7 @@
         <div class="companies-list">
           <div class="row">
             <div
-              *ngFor="let friend of kickers"
+              *ngFor="let friend of friends"
               class="col-lg-3 col-md-4 col-sm-6 col-12"
             >
               <div class="company_profile_info">
@@ -21,17 +21,43 @@
                   <h3>{{ friend.username }}</h3>
                   <h4>{{ friend.bio }}</h4>
                   <ul>
-                    <li><a href="#" title="" class="follow">Unfollow</a></li>
-                    <li>
-                      <a href="#" title="" class="message-us"
-                        ><i class="fa fa-envelope"></i
-                      ></a>
-                    </li>
+                    <li><a href="#" title="" class="follow">Unfriend</a></li>
                   </ul>
                 </div>
                 <a href="user-profile.html" title="" class="view-more-pro"
                   >View Profile</a
                 >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="companies-info">
+    <div class="container">
+      <div class="company-title">
+        <h3>All invitations</h3>
+      </div>
+      <div>
+        <div class="companies-list">
+          <div class="row">
+            <div
+              *ngFor="let friend of invitations"
+              class="col-lg-3 col-md-4 col-sm-6 col-12"
+            >
+              <div class="company_profile_info">
+                <div class="company-up-info">
+                  <img
+                    src="../../assets/images/resources/pf-icon1.png"
+                    alt=""
+                  />
+                  <h3>{{ friend.username }}</h3>
+                  <h4>{{ friend.bio }}</h4>
+                  <ul>
+                    <li><a href="#" title="" class="follow">Accept</a></li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

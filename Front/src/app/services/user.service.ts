@@ -36,8 +36,8 @@ export class UserService {
       username: user.username,
       email: user.email,
       password: user.password,
-      kickers: user.kickers,
-      kicked: user.kicked,
+      friends: user.friends,
+      invitations: user.invitations,
       bio: user.bio,
       stars: user.stars,
     };
@@ -48,9 +48,15 @@ export class UserService {
     );
   }
 
-  getAllUsers() {
+  getFriendsOfFriends(id: String, userid: String) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.get(this.rootUrl, { headers: headers });
+    return this.http.post(
+      this.rootUrl + '/user/friendsOfFriends',
+      { id, userid },
+      {
+        headers: headers,
+      }
+    );
   }
 
   getProfile() {
@@ -95,7 +101,7 @@ export class UserService {
     let headers = new HttpHeaders({
       Authorization: this.authToken,
     });
-
+    console.log('form', form);
     return this.http.put(this.rootUrl + '/user/profile-picture', form, {
       headers: headers,
     });

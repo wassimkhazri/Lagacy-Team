@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { DataService } from '../services/data.service';
 import { PostService } from '../services/post.service';
+import { UserService } from '../services/user.service';
 import { CommentService } from '../services/comment.service';
 import { ToastrService } from 'ngx-toastr';
 import { Post } from '../models/post.model';
@@ -17,6 +18,7 @@ import { ConditionalExpr } from '@angular/compiler';
 export class HomeComponent implements OnInit {
   user = JSON.parse(localStorage.getItem('user') || '{}');
   posts: any;
+  friendsOfFriends = new Array();
   isOpen: any;
   post: Post;
   comment: Comment;
@@ -25,6 +27,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private data: DataService,
     private postService: PostService,
+    private userService: UserService,
     private commentService: CommentService,
     private toastr: ToastrService,
     private router: Router
@@ -41,23 +44,51 @@ export class HomeComponent implements OnInit {
     this.resetForm();
     this.loadPosts();
     this.newuser();
-    this.newkickers();
+    this.newfriends();
+    this.suggestions((data: any) => {
+      this.friendsOfFriends.push(data);
+    });
+
+    console.log('test', this.friendsOfFriends);
   }
 
   loadPosts() {
     this.postService.getAllPosts().subscribe((data) => {
       this.posts = data;
-
       this.isOpen = Array(this.posts.length).fill(false);
       console.log('hello i m home', this.posts);
     });
   }
-
+  suggestions(callback: Function) {
+    var usernames = new Array();
+    console.log(this.user);
+    for (var i = 0; i < this.user.friends.length; i++) {
+      usernames.push(this.user.friends[i].username);
+    }
+    for (var i = 0; i < this.user.friends.length; i++) {
+      console.log(this.user.friends[i].friends.length);
+      for (var j = 0; j < this.user.friends[i].friends.length; j++) {
+        this.userService
+          .getFriendsOfFriends(this.user.friends[i].friends[j], this.user._id)
+          .subscribe((data: any) => {
+            if (
+              usernames.includes(data.username) ||
+              data.username === this.user.username
+            ) {
+            } else {
+              usernames.push(data.username);
+              console.log('data', data);
+              callback(data);
+            }
+          });
+      }
+    }
+  }
   newuser() {
     this.data.changeuser(this.user);
   }
-  newkickers() {
-    this.data.changekickers(this.user.kickers);
+  newfriends() {
+    this.data.changefriends(this.user.friends);
   }
   OnSubmitPost(form: NgForm) {
     const myForm = new FormData();
@@ -95,6 +126,7 @@ export class HomeComponent implements OnInit {
         }
       });
   }
+
   resetForm(form?: NgForm) {
     if (form != null) form.reset();
     this.post = {
@@ -120,8 +152,18 @@ export class HomeComponent implements OnInit {
   onPictureSelected(event: any) {
     return (this.picture = <File>event.target.files[0]);
   }
+
   linkImg(fileName: string) {
     // base_URL returns localhost:3000 or the production URL
     return `http://localhost:3001/${fileName}`;
+  }
+  //methode delete
+  deleteComment(postId: any, commentId: any) {
+    this.commentService.deleteComment(postId, commentId).subscribe(() => {
+      console.log('deleting');
+      // this.post.comments = this.post.comments.filter(comment => {
+      //   return comment._id != commentId
+      // })
+    });
   }
 }

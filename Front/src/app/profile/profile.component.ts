@@ -19,29 +19,28 @@ export class ProfileComponent implements OnInit {
     private userService: UserService
   ) {}
 
-  ngOnInit(): void {
-    this.data.currentuser.subscribe((user) => {
-      this.user = user;
-    });
-    console.log(this.user);
-  }
+  ngOnInit(): void {}
 
   submitUserProfilePicture(event: any) {
     console.log(event.target.files[0]);
-    this.picture = <File>event.target.files[0];
-    const myForm = new FormData();
-    myForm.append('userId', this.user._id);
-    myForm.append('picture', this.picture, this.picture.name);
+    if (event.target.files && event.target.files.length > 0) {
+      this.picture = <File>event.target.files[0];
+      const myForm = new FormData();
+      myForm.append('userId', this.user._id);
+      myForm.append('picture', this.picture, this.picture.name);
 
-    this.userService.updateUserPicture(myForm).subscribe((data: any) => {
-      if (data.success == true) {
-        this.toastr.success('Awesome!', '' + ' Picture updated!', {
-          timeOut: 4000,
-        });
-      } else {
-        this.toastr.error('Error -', 'Something went wrong!');
-      }
-    });
+      this.userService.updateUserPicture(myForm).subscribe((data: any) => {
+        if (data.success == true) {
+          this.toastr.success('Awesome!', '' + ' Picture updated!', {
+            timeOut: 4000,
+          });
+        } else {
+          this.toastr.error('Error -', 'Something went wrong!');
+        }
+      });
+    } else {
+      console.log('hello');
+    }
   }
 
   onPictureSelected(event: any) {

@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MessagesComponent implements OnInit {
   user = JSON.parse(localStorage.getItem('user') || '{}');
-  currentFriend = this.user.kickers[0];
+  currentFriend = this.user.friends[0];
   picture: any | undefined;
 
   constructor(
@@ -22,8 +22,8 @@ export class MessagesComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  changeCurrentThread(newFriend:any) {
-    this.currentFriend = newFriend
+  changeCurrentThread(newFriend: any) {
+    this.currentFriend = newFriend;
   }
 
   submitUserProfilePicture() {}

@@ -5,8 +5,8 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
   providedIn: 'root',
 })
 export class DataService {
-  private kickersSource = new BehaviorSubject(new Array());
-  currentkickers = this.kickersSource.asObservable();
+  private friendsSource = new BehaviorSubject(new Array());
+  currentfriends = this.friendsSource.asObservable();
 
   private currentuserSource = new BehaviorSubject(new Object());
   currentuser = this.currentuserSource.asObservable();
@@ -16,7 +16,9 @@ export class DataService {
   changeuser(user: any) {
     this.currentuserSource.next(user);
   }
-  changekickers(kickers: any) {
-    this.kickersSource.next(kickers);
+  changefriends(friends: any) {
+    this.friendsSource.next(friends);
   }
+
+  
 }

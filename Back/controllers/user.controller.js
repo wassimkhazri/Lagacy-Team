@@ -14,7 +14,7 @@ module.exports.userInfo = (req, res) => {
     return res.status(400).send("Id unknown : " + req.params.id);
   } else {
     UserModel.findById(req.params.id)
-      .populate("kickers")
+      .populate("friends")
       .exec((err, data) => {
         if (!err) {
           res.send(data);
@@ -25,7 +25,16 @@ module.exports.userInfo = (req, res) => {
       .select("-password");
   }
 };
-
+module.exports.friendsOfFriends = (req, res) => {
+  // the function is valid will test if the id existe on the data base if not it will exit the function
+  UserModel.findById(req.body.id).exec((err, data) => {
+    if (!err) {
+      res.send(data);
+    } else {
+      console.error;
+    }
+  });
+};
 module.exports.updateUserPicture = (req, res) => {
   console.log("hey");
 };
@@ -74,20 +83,20 @@ module.exports.kicker = async (req, res) => {
   )
     return res.status(400).json("Id unknown : " + req.params.id);
   try {
-    // add to the kickers list
+    // add to the friends list
     await UserModel.findByIdAndUpdate(
       req.params.id,
-      { $addToSet: { kicked: req.body.idToKicker } },
+      { $addToSet: { invitations: req.body.idToKicker } },
       { new: true, upsert: true },
       (err, data) => {
         if (!err) res.status(201).json(data);
         else return res.status(400).json(err);
       }
     );
-    // add to kicked list
+    // add to invitations list
     await UserModel.findByIdAndUpdate(
       req.body.idToKicker,
-      { $addToSet: { kickers: req.params.id } },
+      { $addToSet: { friends: req.params.id } },
       { new: true, upsert: true },
       (err, data) => {
         // if(!err) res.status(201).json(data);
@@ -99,27 +108,27 @@ module.exports.kicker = async (req, res) => {
   }
 };
 
-module.exports.deskicked = async (req, res) => {
+module.exports.desinvitations = async (req, res) => {
   if (
     !ObjectID.isValid(req.params.id) ||
-    !ObjectID.isValid(req.body.idToDeskicked)
+    !ObjectID.isValid(req.body.idToDesinvitations)
   )
     return res.status(400).json("Id unknown : " + req.params.id);
 
   try {
     await UserModel.findByIdAndUpdate(
       req.params.id,
-      { $pull: { kicked: req.body.idToDeskicked } },
+      { $pull: { invitations: req.body.idToDesinvitations } },
       { new: true, upsert: true },
       (err, data) => {
         if (!err) res.status(201).json(data);
         else return res.status(400).json(err);
       }
     );
-    // add to kicked list
+    // add to invitations list
     await UserModel.findByIdAndUpdate(
-      req.body.idToDeskicked,
-      { $pull: { kickers: req.params.id } },
+      req.body.idToDesinvitations,
+      { $pull: { friends: req.params.id } },
       { new: true, upsert: true },
       (err, data) => {
         // if(!err) res.status(201).json(data);
