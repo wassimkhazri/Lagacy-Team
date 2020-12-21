@@ -2,7 +2,6 @@ const router = require("express").Router();
 const postController = require("../controllers/post.controller");
 const multer = require("multer");
 
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./upload/");
@@ -32,5 +31,6 @@ router.patch("/unlike-post/:id", postController.unlikePost);
 router.patch("/comment-post/:id", postController.commentPost);
 router.patch("/edit-comment-post/:id", postController.editCommentPost);
 router.patch("/delete-comment-post/:id", postController.deleteCommentPost);
+router.post("/createMessage", postController.createMessage);
 
 module.exports = router;

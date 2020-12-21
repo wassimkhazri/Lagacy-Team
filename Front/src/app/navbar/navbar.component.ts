@@ -5,25 +5,24 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
+  user = JSON.parse(localStorage.getItem('user') || '{}');
 
   constructor(
-    private router:Router,
-    private userService:UserService,
+    private router: Router,
+    private userService: UserService,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  Logout(){
-    this.toastr.success('Logged out!','', {
+  Logout() {
+    this.toastr.success('Logged out!', '', {
       timeOut: 4000,
     });
     this.userService.Logout();
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
-
 }

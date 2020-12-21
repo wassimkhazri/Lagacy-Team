@@ -34,6 +34,10 @@ const PostSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "user"
           },
+          commenterUsername: {
+            type: String,
+            required: true
+          },
           text: String,
           timestamp: Number
         }

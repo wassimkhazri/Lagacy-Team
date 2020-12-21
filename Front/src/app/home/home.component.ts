@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { DataService } from '../services/data.service';
 import { PostService } from '../services/post.service';
+import { CommentService } from '../services/comment.service';
 import { ToastrService } from 'ngx-toastr';
 import { Post } from '../models/post.model';
+import { Comment } from '../models/comment.model';
 import { Router } from '@angular/router';
 import { ConditionalExpr } from '@angular/compiler';
 
@@ -17,15 +19,18 @@ export class HomeComponent implements OnInit {
   posts: any;
   isOpen: any;
   post: Post;
+  comment: Comment;
   picture: any | undefined;
   idpost: any | undefined;
   constructor(
     private data: DataService,
     private postService: PostService,
+    private commentService: CommentService,
     private toastr: ToastrService,
     private router: Router
   ) {
     this.post = new Post();
+    this.comment = new Comment();
   }
 
   openCommentText(index: any) {
@@ -35,8 +40,8 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.resetForm();
     this.loadPosts();
-    // this.data.currentuser.subscribe((user) => (this.user = user));
     this.newuser();
+    this.newkickers();
   }
 
   loadPosts() {
@@ -49,9 +54,11 @@ export class HomeComponent implements OnInit {
   }
 
   newuser() {
+    this.data.changeuser(this.user);
+  }
+  newkickers() {
     this.data.changekickers(this.user.kickers);
   }
-
   OnSubmitPost(form: NgForm) {
     const myForm = new FormData();
     myForm.append('posterId', this.user._id);
@@ -70,7 +77,24 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
+  OnSubmitcomment(form: NgForm, postId: String) {
+    this.comment.commenterId = this.user._id;
+    this.comment.commenterUsername = this.user.username;
+    this.comment.text = form.value.text;
+    this.commentService
+      .addcomment(this.comment, postId)
+      .subscribe((data: any) => {
+        if (data) {
+          this.resetForm(form);
+          this.toastr.success('Awesome!', data.msg + ' Verify Your Account', {
+            timeOut: 4000,
+          });
+          this.loadPosts();
+        } else {
+          this.toastr.error('Error -', data.msg);
+        }
+      });
+  }
   resetForm(form?: NgForm) {
     if (form != null) form.reset();
     this.post = {

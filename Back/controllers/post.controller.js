@@ -1,4 +1,5 @@
 const PostModel = require("../models/post.model");
+const MessageModel = require("../models/message.model");
 const { uploadErrors } = require("../utils/errors.utils");
 const UserModel = require("../models/user.model");
 const ObjectID = require("mongoose").Types.ObjectId;
@@ -6,6 +7,17 @@ const fs = require("fs");
 const { promisify } = require("util");
 const pipeline = promisify(require("stream").pipeline);
 const multer = require("multer");
+
+module.exports.createMessage = (req, res) => {
+  const newMessage = new MessageModel({
+    senderId: req.body.userId,
+    receiverId: req.body.receiverId,
+    message: req.body.message
+  });
+
+  newMessage.save();
+  res.json({ success: true });
+};
 
 module.exports.createPostTest = (req, res, next) => {
   const newPost = new PostModel({
@@ -166,6 +178,7 @@ module.exports.unlikePost = async (req, res) => {
 };
 
 module.exports.commentPost = (req, res) => {
+  console.log(req.body.comment);
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("Id unknown : " + req.params.id);
   try {
@@ -174,8 +187,9 @@ module.exports.commentPost = (req, res) => {
       {
         $push: {
           comments: {
-            commenterId: req.body.commenterId,
-            text: req.body.text,
+            commenterId: req.body.comment.commenterId,
+            commenterUsername: req.body.comment.commenterUsername,
+            text: req.body.comment.text,
             timestamp: new Date().getTime()
           }
         }

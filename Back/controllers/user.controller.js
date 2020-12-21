@@ -25,6 +25,10 @@ module.exports.userInfo = (req, res) => {
       .select("-password");
   }
 };
+
+module.exports.updateUserPicture = (req, res) => {
+  console.log("hey");
+};
 module.exports.updateUser = async (req, res) => {
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).json("Id unknown : " + req.params.id);

@@ -34,7 +34,6 @@ export class PostService {
     let headers = new HttpHeaders({
       Authorization: this.authToken,
     });
-    console.log('authtoken:', this.authToken);
     return this.http.post(this.rootUrl + '/post/create', post, {
       headers: headers,
     });

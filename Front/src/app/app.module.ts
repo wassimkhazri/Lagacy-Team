@@ -16,9 +16,12 @@ import { MessagesComponent } from './messages/messages.component';
 
 import { UserService } from './services/user.service';
 import { ValidateService } from './services/validate.service';
+import { WebsocketService } from './services/web-socket.service';
+import { ChatService } from './services/chat.service';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ProfileComponent } from './profile/profile.component';
 import { SettingComponent } from './setting/setting.component';
+import { DisplayMessageComponent } from './display-message/display-message.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,7 @@ import { SettingComponent } from './setting/setting.component';
     MessagesComponent,
     ProfileComponent,
     SettingComponent,
-
+    DisplayMessageComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +50,13 @@ import { SettingComponent } from './setting/setting.component';
       },
     }),
   ],
-  providers: [UserService, ValidateService, AuthGuard],
+  providers: [
+    UserService,
+    ValidateService,
+    AuthGuard,
+    WebsocketService,
+    ChatService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

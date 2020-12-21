@@ -74,7 +74,13 @@ export class UserService {
     this.user = null;
     localStorage.clear();
   }
-
+  deleteUser(userId: String) {
+    console.log(userId);
+    const deleteEndpoint = 'http://localhost:3001/api/user' + userId;
+    return this.http.delete(deleteEndpoint).subscribe((data) => {
+      console.log(data);
+    });
+  }
   loadToken() {
     const token = localStorage.getItem('id_token');
     this.authToken = token;
@@ -83,5 +89,15 @@ export class UserService {
   loggedIn() {
     let token = localStorage.getItem('id_token') || undefined;
     return !helper.isTokenExpired(token);
+  }
+
+  updateUserPicture(form: any) {
+    let headers = new HttpHeaders({
+      Authorization: this.authToken,
+    });
+
+    return this.http.put(this.rootUrl + '/user/profile-picture', form, {
+      headers: headers,
+    });
   }
 }
